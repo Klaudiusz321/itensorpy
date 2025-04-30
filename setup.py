@@ -16,7 +16,7 @@ setup(
     description="A Python package for tensor calculations in general relativity",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/itensorpy",
+    url="https://github.com/Klaudiusz321/itensorpy",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
