@@ -178,6 +178,9 @@ class RiemannTensor:
         Returns:
             Dictionary mapping (a,b,c,d) indices to non - zero symbolic expressions
         """
+        if self.metric is None:
+            raise ValueError("Valid metric tensor required to get nonzero components")
+            
         n = self.metric.dimension
         result = {}
 

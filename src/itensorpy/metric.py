@@ -49,6 +49,11 @@ class Metric:
 
         self.coordinates = coordinates or []
         self.params = params or []
+        
+        # Validate coordinates
+        if not self.coordinates:
+            raise ValueError("Coordinates list cannot be empty")
+            
         self.dimension = len(self.coordinates)
         self.simplify_level = simplify_level
 
