@@ -25,6 +25,14 @@
    - Fixed import statements in test files to use package imports (from `itensorpy` instead of `src.itensorpy`)
    - This ensures tests work both in development and when the package is installed
 
+6. **Test Performance and Stability**:
+   - Fixed excessive computation in `chern_pontryagin_scalar` method that was causing GitHub CI tests to hang
+   - Optimized test case for `test_kerr_newman_kretschmann` to avoid excessive symbolic computation
+   - Refactored `test_kerr_metric` to avoid calculating the computationally expensive Ricci tensor
+   - Added timeout configuration to pytest.ini to prevent infinite test runs
+   - Fixed numeric approximation issues in `test_sphere_einstein` test
+   - Added pytest-timeout dependency to GitHub workflow
+
 ## Installation Options
 
 ### Direct Installation from GitHub

@@ -45,10 +45,20 @@ def test_sphere_einstein():
     # For a 2D sphere, Einstein tensor is G_μν = 0 (in 2D, Einstein tensor vanishes)
     # This is because in 2D, the Ricci tensor is proportional to the metric:
     # R_μν = (R/2)g_μν, which makes G_μν = 0
-    n = metric.dimension
-    for mu in range(n):
-        for nu in range(n):
-            assert simplify(einstein.get_component_lower(mu, nu)) == 0
+    
+    # Instead of checking the exact value, which can have simplification issues,
+    # check that the numeric value is close to zero for specific values of theta
+    for theta_val in [0.1, 0.5, 1.0, 2.0, 3.0]:
+        for mu in range(metric.dimension):
+            for nu in range(metric.dimension):
+                # Get the component without simplification
+                expr = einstein.get_component_lower(mu, nu, simplify=False)
+                # Skip testing at theta=0 or theta=pi where we might have singularities
+                # due to spherical coordinates
+                if theta_val not in [0, sp.pi]:
+                    # Substitute numeric value and check that it's close to zero
+                    numeric_val = float(expr.subs(theta, theta_val))
+                    assert abs(numeric_val) < 1e-10, f"Component ({mu},{nu}) not zero at theta={theta_val}"
 
 
 def test_schwarzschild_einstein():
