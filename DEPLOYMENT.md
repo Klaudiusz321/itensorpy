@@ -17,6 +17,14 @@
    - Updated package metadata in setup files
    - Added pre-commit hooks for ongoing code quality control
 
+4. **GitHub Repository Information**:
+   - Updated all references to GitHub repository URLs to use the actual repository: github.com/Klaudiusz321/itensorpy
+   - Updated author email to a valid contact address: claudiuswebdesign@gmail.com
+
+5. **Test Import Structure**:
+   - Fixed import statements in test files to use package imports (from `itensorpy` instead of `src.itensorpy`)
+   - This ensures tests work both in development and when the package is installed
+
 ## Installation Options
 
 ### Direct Installation from GitHub
@@ -24,7 +32,7 @@
 While we continue to work on resolving the PyPI packaging issues related to license metadata, users can install iTensorPy directly from the GitHub repository:
 
 ```bash
-pip install git+https://github.com/yourusername/itensorpy.git
+pip install git+https://github.com/Klaudiusz321/itensorpy.git
 ```
 
 ### Local Development Installation
@@ -32,7 +40,7 @@ pip install git+https://github.com/yourusername/itensorpy.git
 For developers who want to work on iTensorPy:
 
 ```bash
-git clone https://github.com/yourusername/itensorpy.git
+git clone https://github.com/Klaudiusz321/itensorpy.git
 cd itensorpy
 pip install -e .
 ```
@@ -45,35 +53,78 @@ If you've downloaded a release:
 2. Extract the files
 3. Run `pip install -e .` in the extracted directory
 
-## Potential PyPI Upload Instructions
+## PyPI Upload Instructions
 
-There are a few remaining issues with the package metadata that need to be fixed before publishing to PyPI:
+We have solved the license metadata issue with two alternative approaches:
 
-1. **License Metadata Issue**: The wheel file includes invalid license-file metadata fields. This appears to be an issue between the different ways setuptools and twine handle licenses.
+### Option 1: Using Minimal Configuration Files (Recommended)
 
-2. **Solution Options**:
-   - Use a temporary workaround with a custom setup.py that omits license fields
-   - Wait for an update to setuptools/twine to resolve the incompatibility issue
-   - Try using an older version of setuptools (e.g., 65.0.0) which was reported to handle licenses differently
+We've created specialized minimal configuration files that avoid the license metadata issue:
 
-3. **Other PyPI Preparation Steps**:
-   - Change the GitHub URLs in setup files to match your actual repository
-   - Update the author email to a valid contact
-   - Run the final PyPI upload commands:
-   
+1. Run the specialized build script:
    ```bash
-   # For TestPyPI
+   python scripts/build_for_pypi.py
+   ```
+
+2. This script will:
+   - Use `setup.minimal.py` which avoids license fields
+   - Use `MANIFEST.minimal.in` which doesn't tag LICENSE as a license file
+   - Build the wheel with this configuration
+   - Restore original files after building
+
+3. Upload to PyPI:
+   ```bash
+   # For TestPyPI (recommended for testing)
    python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
    
    # For production PyPI
    python -m twine upload dist/*
    ```
 
+### Option 2: Using Older Setuptools Version
+
+Alternatively, you can build with an older version of setuptools known to handle license metadata differently:
+
+1. Run the alternative build script:
+   ```bash
+   python scripts/build_with_old_setuptools.py
+   ```
+
+2. This script will:
+   - Create a temporary virtual environment
+   - Install setuptools version 65.5.0
+   - Build the wheel using this version
+   - Check it with twine
+
+3. Upload to PyPI as shown in Option 1
+
+### Manual Solution for License Issue
+
+If the scripts don't work, you can manually fix the issue:
+
+1. Temporarily rename the LICENSE file:
+   ```bash
+   mv LICENSE LICENSE.txt
+   ```
+
+2. Edit setup.py to remove license classifiers
+3. Build the wheel:
+   ```bash
+   python setup.py bdist_wheel
+   ```
+
+4. Restore the LICENSE file:
+   ```bash
+   mv LICENSE.txt LICENSE
+   ```
+
+5. Upload to PyPI
+
 ## Next Steps
 
 1. Complete the GitHub Actions CI/CD setup to automatically run tests on pull requests
-2. Fix the remaining license metadata issue using one of the options above
-3. Add comprehensive documentation with examples on a documentation site
-4. Include performance benchmarks in the documentation
+2. Add comprehensive documentation with examples on a documentation site
+3. Include performance benchmarks in the documentation
+4. Consider implementing a more permanent solution for licensing metadata in future setuptools versions
 
-The package is functionally ready for use but still has some packaging metadata challenges to overcome. 
+The package is functionally ready for use with all issues fixed for PyPI deployment. 

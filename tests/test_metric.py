@@ -6,8 +6,8 @@ import pytest
 import sympy as sp
 from sympy import symbols, diag, sin
 
-from src.itensorpy.metric import Metric
-from src.itensorpy.spacetimes import schwarzschild
+from itensorpy.metric import Metric
+from itensorpy.spacetimes import schwarzschild
 
 
 def test_metric_initialization():
