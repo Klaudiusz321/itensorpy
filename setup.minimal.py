@@ -11,7 +11,7 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="itensorpy",
-    version="0.2.0",
+    version="0.2.3",
     author="iTensorPy Team",
     author_email="claudiuswebdesign@gmail.com",  # Using the updated email
     description="A Python package for tensor calculations in general relativity",
