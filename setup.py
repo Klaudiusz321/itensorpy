@@ -10,9 +10,9 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="itensorpy",
-    version="0.2.2",
+    version="0.2.4",
     author="iTensorPy Team",
-    author_email="itensorpy@example.com",
+    author_email="claudiuswebdesign@gmail.com",
     description="A Python package for tensor calculations in general relativity",
     long_description=long_description,
     long_description_content_type="text/markdown",
