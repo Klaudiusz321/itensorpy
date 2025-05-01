@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="itensorpy",
-    version="0.2.0",
+    version="0.2.3",
     author="iTensorPy Team",
     author_email="itensorpy@example.com",
     description="A Python package for tensor calculations in general relativity",
