@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "itensorpy"
-version = "0.1.0"
+version = "0.2.2"
 description = "Symbolic and numerical tensor computations for general relativity"
 readme = "README.md"
 authors = [{ name = "Klaudiusz", email = "claudiuswebdesign@gmail.com" }]
