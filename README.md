@@ -1,6 +1,8 @@
 # iTensorPy
 
-
+<p align="center">
+  <img src="./logo.png" alt="iTensorPy Logo" width="300px">
+</p>
 [![Python Tests](https://github.com/yourusername/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/yourusername/itensorpy/actions)
 [![codecov](https://codecov.io/gh/yourusername/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/itensorpy)
 [![PyPI version](https://badge.fury.io/py/itensorpy.svg)](https://badge.fury.io/py/itensorpy)
