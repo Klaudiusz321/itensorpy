@@ -1,4 +1,5 @@
 # iTensorPy
+![ChatGPT Image May 17, 2025, 08_57_58 PM](https://github.com/user-attachments/assets/be4cd4c0-77f8-4976-be1a-95905c64af96)
 
 [![Python Tests](https://github.com/yourusername/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/yourusername/itensorpy/actions)
 [![codecov](https://codecov.io/gh/yourusername/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/itensorpy)
