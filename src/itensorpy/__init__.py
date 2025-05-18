@@ -6,7 +6,7 @@ Riemann and Ricci tensors, Einstein tensors, and other tensor operations relevan
 to general relativity and differential geometry.
 """
 
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 
 # Import all public classes and functions
 from .metric import Metric
