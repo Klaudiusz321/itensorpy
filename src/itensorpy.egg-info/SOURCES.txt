@@ -51,6 +51,7 @@ src/itensorpy/tensor_ops/shape.py
 tests/conftest.py
 tests/test_christoffel.py
 tests/test_curvature.py
+tests/test_curvature_extended.py
 tests/test_einstein.py
 tests/test_errors.py
 tests/test_flrw_fix.py
@@ -60,11 +61,13 @@ tests/test_metric.py
 tests/test_ricci.py
 tests/test_riemann.py
 tests/test_spacetimes.py
+tests/test_utils.py
 tests/differential_ops/__init__.py
 tests/differential_ops/test_field.py
 tests/matrix_ops/__init__.py
 tests/matrix_ops/test_matrix_core.py
 tests/matrix_ops/test_matrix_operations.py
 tests/tensor_ops/__init__.py
+tests/tensor_ops/test_einsum_extended.py
 tests/tensor_ops/test_tensor_core.py
 tests/tensor_ops/test_tensor_operations.py
