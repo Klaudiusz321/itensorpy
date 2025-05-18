@@ -23,6 +23,9 @@ from .utils import (
     custom_simplify
 )
 from . import spacetimes
+from .matrix_ops import MatrixOps
+from .tensor_ops import TensorND
+from .differential_ops import Field
 
 __all__ = [
     'Metric', 'ChristoffelSymbols', 'RiemannTensor',
@@ -30,5 +33,7 @@ __all__ = [
     'CurvatureInvariants', 'spacetimes',
     'generate_index_riemann', 'generate_index_ricci',
     'generate_index_christoffel', 'lower_indices',
-    'custom_simplify'
+    'custom_simplify',
+    # New modules
+    'MatrixOps', 'TensorND', 'Field'
 ]

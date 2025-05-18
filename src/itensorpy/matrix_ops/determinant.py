@@ -3,6 +3,6 @@
 class DeterminantMixin:
   
 
-    def det(self):
-       
+    def determinant(self):
+        """Calculate the determinant of this matrix"""
         return self.mat.det()

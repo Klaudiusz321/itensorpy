@@ -2,7 +2,7 @@
 
 import numpy as _np
 from sympy import MutableDenseNDimArray as _SymArray
-from sympy import Iterable as _SymIterable
+from collections.abc import Iterable as _Iterable
 
 from .arithmetic import ArithmeticMixin
 from .shape import ShapeMixin
@@ -24,8 +24,8 @@ class TensorND(ArithmeticMixin, ShapeMixin, ContractionMixin, EinsumMixin):
         if isinstance(data, _np.ndarray):
             data = data.tolist()
 
-        # 2) list/tuple lub sympy Iterable → budujemy sympy-ową tablicę
-        if isinstance(data, (list, tuple)) or isinstance(data, _SymIterable):
+        # 2) list/tuple lub Iterable → budujemy sympy-ową tablicę
+        if isinstance(data, (list, tuple)) or (isinstance(data, _Iterable) and not isinstance(data, (str, bytes))):
             self.data = _SymArray(data)
         # 3) już sympy MutableDenseNDimArray
         elif isinstance(data, _SymArray):

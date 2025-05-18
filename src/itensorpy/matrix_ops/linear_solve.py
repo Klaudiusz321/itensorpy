@@ -1,20 +1,31 @@
 # linear_solve.py
 
-from sympy import solve_linear_system, Matrix as _M
+import sympy as _sympy
+from sympy import Matrix as _M
 
 class LinearSolveMixin:
     
-
     def solve(self, b):
+        """
+        Solves the linear system Ax = b, where A is this matrix.
         
-        # Zamieniamy b na kolumnową macierz
-        if not hasattr(b, 'rows'):
-            b = _M(b)
-        if b.cols != 1 or b.rows != self.mat.rows:
-            raise ValueError("solve: b must be a column vector of the same size as A")
-        aug = self.mat.row_join(b)
-        sol = solve_linear_system(aug, *self._symbols_for_vars())
-        return sol
+        Args:
+            b: The right-hand side of the equation, should be a MatrixOps instance
+            
+        Returns:
+            MatrixOps: solution to the system
+        """
+        if not hasattr(b, 'mat'):
+            raise TypeError("b must be a MatrixOps instance")
+            
+        # Get the raw sympy Matrix from b
+        b_mat = b.mat
+        
+        # Solve the system using sympy's solve_linear_system
+        x = self.mat.solve(b_mat)
+        
+        # Return the solution as a MatrixOps instance
+        return self.__class__(x)
 
     def _symbols_for_vars(self):
         

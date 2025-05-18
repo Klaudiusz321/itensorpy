@@ -2,12 +2,10 @@
 
 class EigenMixin:
    
-
-    def eigen(self):
-        
-        vals = self.mat.eigenvals()
-        vecs = self.mat.eigenvects()
-        # eigenvects() zwraca listę (value, multiplicity, [vectors])
-        eigenvalues = list(vals.keys())
-        eigenvectors = [v for (_, _, vec_list) in vecs for v in vec_list]
-        return eigenvalues, eigenvectors
+    def eigenvalues(self):
+        """Return the eigenvalues of this matrix"""
+        return self.mat.eigenvals()
+    
+    def eigenvectors(self):
+        """Return the eigenvectors of this matrix"""
+        return self.mat.eigenvects()

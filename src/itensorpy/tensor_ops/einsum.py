@@ -2,6 +2,8 @@
 
 from collections import defaultdict
 from sympy.tensor.array import tensorproduct, tensorcontraction
+import numpy as np
+import sympy as sp
 
 
 def parse_einsum_pairs(input_notations, output_notation):
@@ -33,6 +35,48 @@ def parse_einsum_pairs(input_notations, output_notation):
 
 class EinsumMixin:
     
+    def einsum_product(self, subscripts, *operands):
+        """
+        Perform an Einstein summation operation between this tensor and others.
+        
+        Args:
+            subscripts: A string with the subscripts for summation (like "ij,jk->ik")
+            *operands: Other TensorND objects to contract with
+            
+        Returns:
+            TensorND: Result of the einsum operation
+        """
+        # Convert all inputs to numpy arrays for the einsum operation
+        np_arrays = [self.to_numpy()]
+        for op in operands:
+            if not hasattr(op, 'to_numpy'):
+                raise TypeError("All operands must be TensorND instances")
+            np_arrays.append(op.to_numpy())
+            
+        # Perform the einsum operation
+        result_np = np.einsum(subscripts, *np_arrays)
+        
+        # Convert back to a TensorND
+        return self.__class__(result_np)
+    
+    def einsum_reduce(self, subscripts):
+        """
+        Perform an Einstein summation reduction operation on this tensor alone.
+        
+        Args:
+            subscripts: A string with the subscripts for reduction (like "ii->")
+            
+        Returns:
+            TensorND or scalar: Result of the einsum operation
+        """
+        result_np = np.einsum(subscripts, self.to_numpy())
+        
+        # If the result is a scalar, return it directly
+        if isinstance(result_np, (int, float, complex, np.number)):
+            return result_np
+            
+        # Otherwise, convert back to a TensorND
+        return self.__class__(result_np)
 
     def einsum(self, notation, *others):
         # 1) rozbijamy notację wejście/wyjście

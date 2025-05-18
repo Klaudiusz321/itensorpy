@@ -1,26 +1,44 @@
 # src/itensorpy/tensor_ops/arithmetic.py
-
+import sympy as sp
 from sympy.tensor.array import tensorproduct
 
 class ArithmeticMixin:
     """
-    Mix-in: element-wise add/sub/mul/div dla tensorów tego samego kształtu,
-    oraz tensorprodukt @.
+    Mixin zawierający operacje arytmetyczne dla tensorów.
     """
 
-    def _check_shape_match(self, other):
+    def add(self, other):
+        """
+        Dodawanie tensorów tej samej wielkości.
+        Parametry:
+            other (TensorND): Tensor do dodania
+        Zwraca:
+            TensorND: Nowy tensor z sumą elementów
+        """
+        if not hasattr(other, 'data'):
+            raise TypeError("other must be a TensorND instance")
+        
         if self.shape != other.shape:
-            raise ValueError(
-                f"Shape mismatch: {self.shape} vs {other.shape}"
-            )
-
-    def __add__(self, other):
-        self._check_shape_match(other)
-        return self.__class__(self.data + other.data)
-
-    def __sub__(self, other):
-        self._check_shape_match(other)
-        return self.__class__(self.data - other.data)
+            raise ValueError(f"Cannot add tensors with different shapes: {self.shape} vs {other.shape}")
+        
+        result = self.data + other.data
+        return self.__class__(result)
+    
+    def subtract(self, other):
+       
+        if not hasattr(other, 'data'):
+            raise TypeError("other must be a TensorND instance")
+        
+        if self.shape != other.shape:
+            raise ValueError(f"Cannot subtract tensors with different shapes: {self.shape} vs {other.shape}")
+        
+        result = self.data - other.data
+        return self.__class__(result)
+    
+    def multiply_scalar(self, scalar):
+       
+        result = self.data * scalar
+        return self.__class__(result)
 
     def __mul__(self, other):
         # tensor * tensor (elementwise) albo tensor * skalar

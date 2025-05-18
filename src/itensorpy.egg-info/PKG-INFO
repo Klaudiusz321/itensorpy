@@ -1,44 +1,30 @@
 Metadata-Version: 2.4
 Name: itensorpy
-Version: 0.2.0
-Summary: A Python package for tensor calculations in general relativity
+Version: 0.2.4
+Summary: Symbolic and numerical tensor computations for general relativity
 Home-page: https://github.com/Klaudiusz321/itensorpy
 Author: iTensorPy Team
-Author-email: itensorpy@example.com
+Author-email: Klaudiusz <claudiuswebdesign@gmail.com>
 License: MIT
-Project-URL: Bug Tracker, https://github.com/yourusername/itensorpy/issues
-Project-URL: Documentation, https://github.com/yourusername/itensorpy/docs
-Classifier: Programming Language :: Python :: 3
-Classifier: Operating System :: OS Independent
-Classifier: Topic :: Scientific/Engineering :: Physics
-Classifier: Topic :: Scientific/Engineering :: Mathematics
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sympy>=1.7.1
-Requires-Dist: numpy>=1.19.0
-Provides-Extra: dev
-Requires-Dist: pytest>=6.0.0; extra == "dev"
-Requires-Dist: pytest-cov>=2.10.0; extra == "dev"
-Requires-Dist: black>=20.8b1; extra == "dev"
-Requires-Dist: flake8>=3.8.0; extra == "dev"
-Requires-Dist: sphinx>=3.2.0; extra == "dev"
+Requires-Dist: sympy>=1.11
+Requires-Dist: numpy>=1.23
 Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: license-file
-Dynamic: provides-extra
-Dynamic: requires-dist
 Dynamic: requires-python
-Dynamic: summary
 
 # iTensorPy
 
-[![Python Tests](https://github.com/yourusername/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/yourusername/itensorpy/actions)
-[![codecov](https://codecov.io/gh/yourusername/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/itensorpy)
+
+<p align="center">
+  <img src="./logo.png" alt="iTensorPy Logo" width="300px">
+</p>
+
+[![Python Tests](https://github.com/Klaudiusz321/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/Klaudiusz321/itensorpy/actions)
+[![Codecov](https://codecov.io/gh/Klaudiusz321/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/Klaudiusz321/itensorpy)
 [![PyPI version](https://badge.fury.io/py/itensorpy.svg)](https://badge.fury.io/py/itensorpy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
