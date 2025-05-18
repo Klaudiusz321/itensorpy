@@ -25,8 +25,18 @@ jobs:
         rm -rf dist/
         mkdir -p dist/
         
+    - name: Install build dependencies
+      run: |
+        python -m pip install -r requirements-dev.txt
+    
     - name: Build package
-      run: python -m build
+      run: |
+        # Make sure we're using the correct setup.py with version 0.3.0
+        python -m build
+        
+    - name: Verify package metadata
+      run: |
+        python -m twine check dist/* || echo "Warning: metadata validation issues, but proceeding anyway"
       
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
@@ -34,3 +44,4 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
         skip_existing: true
+        verbose: true

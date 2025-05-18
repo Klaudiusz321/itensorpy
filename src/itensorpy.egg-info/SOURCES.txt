@@ -6,7 +6,7 @@ README.md
 pyproject.toml
 pytest.ini
 setup.cfg
-setup_final.py
+setup.py
 tox.ini
 docs/conf.py
 docs/index.rst
