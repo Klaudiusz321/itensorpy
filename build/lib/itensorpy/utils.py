@@ -16,7 +16,13 @@ def generate_index_riemann(n):
 
     Returns:
         list: List of tuples (a,b,c,d) representing unique Riemann components
+        
+    Raises:
+        ValueError: If n <= 0
     """
+    if n <= 0:
+        raise ValueError("Dimension must be a positive integer")
+    
     index = []
     for a in range(n):
         for b in range(a, n):
@@ -37,7 +43,13 @@ def generate_index_ricci(n):
 
     Returns:
         list: List of tuples (i,j) representing unique Ricci components
+        
+    Raises:
+        ValueError: If n <= 0
     """
+    if n <= 0:
+        raise ValueError("Dimension must be a positive integer")
+    
     index = []
     for i in range(n):
         for j in range(i, n):
@@ -55,7 +67,13 @@ def generate_index_christoffel(n):
 
     Returns:
         list: List of tuples (a,b,c) representing unique Christoffel components
+        
+    Raises:
+        ValueError: If n <= 0
     """
+    if n <= 0:
+        raise ValueError("Dimension must be a positive integer")
+    
     index = []
     for a in range(n):
         for b in range(n):
@@ -66,23 +84,61 @@ def generate_index_christoffel(n):
 
 def lower_indices(tensor, metric, n):
     """
-    Lower the first index of a rank 4 tensor (e.g., Riemann tensor).
+    Lower the first index of a tensor (supports both rank-2 matrices and rank-4 Riemann tensors).
 
     Args:
-        tensor (list): 4D array representing the tensor with first index up
+        tensor: Either a 2D Matrix or a 4D nested list representing the tensor with first index up
         metric (Matrix): Metric tensor (g_μν)
-        n (int): Dimension of the space
+        n (list or int): Dimensions or dimension of the space
 
     Returns:
-        list: 4D array representing the tensor with first index lowered
+        The tensor with first index lowered, in the same format as the input tensor
+
+    Raises:
+        ValueError: If dimensions don't match or inputs are invalid
+        TypeError: If tensor type is not supported
     """
-    result = [[[[0 for _ in range(n)] for _ in range(n)] for _ in range(n)] for _ in range(n)]
-    for a in range(n):
-        for b in range(n):
-            for c in range(n):
-                for d in range(n):
-                    result[a][b][c][d] = sum(metric[a, i] * tensor[i][b][c][d] for i in range(n))
-    return result
+    # If n is a list, use the length as the dimension
+    if isinstance(n, list):
+        dimension = len(n)
+    else:
+        dimension = n
+    
+    # Check if tensor is a matrix (rank-2)
+    if hasattr(tensor, 'shape'):
+        if tensor.shape[0] != dimension or tensor.shape[1] != dimension:
+            raise ValueError("Tensor dimensions don't match specified dimension")
+            
+        if metric.shape[0] != dimension or metric.shape[1] != dimension:
+            raise ValueError("Metric dimensions don't match specified dimension")
+        
+        # Create result matrix of the same shape
+        result = sp.zeros(dimension, dimension)
+        
+        # Lower the indices for rank-2 tensor
+        for a in range(dimension):
+            for b in range(dimension):
+                result[a, b] = sum(metric[a, i] * tensor[i, b] for i in range(dimension))
+        
+        return result
+    
+    # Check if tensor is a 4D nested list (rank-4, like Riemann tensor)
+    elif isinstance(tensor, list) and all(isinstance(inner, list) for inner in tensor):
+        # Create a 4D result array
+        result = [[[[0 for _ in range(dimension)] for _ in range(dimension)] 
+                   for _ in range(dimension)] for _ in range(dimension)]
+        
+        # Lower the first index
+        for a in range(dimension):
+            for b in range(dimension):
+                for c in range(dimension):
+                    for d in range(dimension):
+                        result[a][b][c][d] = sum(metric[a, i] * tensor[i][b][c][d] for i in range(dimension))
+        
+        return result
+    
+    else:
+        raise TypeError("Unsupported tensor type. Must be either a Matrix or a nested list.")
 
 
 def custom_simplify(expr, level=2):

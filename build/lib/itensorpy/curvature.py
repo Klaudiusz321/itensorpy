@@ -89,16 +89,22 @@ class CurvatureInvariants:
             return False
 
         # Check if we have the typical parameters M and a
-        if len(self.metric.coordinates) != 4 or len(self.metric.params) != 2:
+        if len(self.metric.coordinates) != 4:
             return False
 
         # Check coordinate names
         coord_names = [str(c) for c in self.metric.coordinates]
-        param_names = [str(p) for p in self.metric.params]
-
-        return ('t' in coord_names[0] and 'r' in coord_names[1] and
-                'theta' in coord_names[2] and 'phi' in coord_names[3] and
-                'M' in param_names and 'a' in param_names)
+        
+        # If any t, r, theta, phi coordinates are in the metric and there's a t-phi cross-term,
+        # it's likely a Kerr-type metric
+        if ('t' in coord_names[0] and 'r' in coord_names[1] and 
+            'theta' in coord_names[2] and 'phi' in coord_names[3]):
+            
+            # Check for off-diagonal t-phi component characteristic of Kerr
+            if abs(self.metric.g[0,3]) > 0:
+                return True
+        
+        return False
 
     def _is_flat(self):
         """Check if this is a flat metric."""
@@ -190,24 +196,24 @@ class CurvatureInvariants:
 
     def chern_pontryagin_scalar(self, simplify_level=None):
         """
-        Compute the Chern - Pontryagin scalar (also called the Hirzebruch signature).
+        Compute the Chern-Pontryagin scalar (also called the Hirzebruch signature).
 
-        The Chern - Pontryagin scalar is defined as R_{abcd}*R^{abcd} where * is the Hodge dual.
+        The Chern-Pontryagin scalar is defined as R_{abcd}*R^{abcd} where * is the Hodge dual.
         It's a measure of gravitational parity violation.
 
         Args:
             simplify_level: Override the default simplification level
 
         Returns:
-            sympy.Expr: The Chern - Pontryagin scalar
+            sympy.Expr: The Chern-Pontryagin scalar
         """
         # Return cached value if available
         if self._chern_pontryagin is not None:
             return self._chern_pontryagin
 
-        # Check dimension
+        # Check dimension - this should happen BEFORE any expensive calculations
         if self.dim != 4:
-            raise ValueError("Chern - Pontryagin scalar is only defined for 4 - dimensional spacetimes")
+            raise ValueError("Chern-Pontryagin scalar is only defined for 4-dimensional spacetimes")
 
         # Use optimization for known metrics
         if self._is_flat():
@@ -215,11 +221,11 @@ class CurvatureInvariants:
             return self._chern_pontryagin
 
         if self._is_schwarzschild():
-            # Schwarzschild has zero Chern - Pontryagin scalar due to symmetry
+            # Schwarzschild has zero Chern-Pontryagin scalar due to symmetry
             self._chern_pontryagin = sp.S.Zero
             return self._chern_pontryagin
 
-        # For general metrics, compute explicitly
+        # For general metrics, compute explicitly but more efficiently
         # Get the Riemann tensor
         R_abcd = self.riemann.components_down
         g = self.g
@@ -228,37 +234,44 @@ class CurvatureInvariants:
         # Get the determinant of the metric
         g_det = g.det()
 
-        # Compute the Levi - Civita symbol (4D)
-        eps = lambda a, b, c, d: sp.LeviCivita(a, b, c, d)
-
-        # Term: R_{abcd}*R^{abcd}
+        # Use dual Riemann tensor formula more efficiently
+        # Pre-compute the Levi-Civita tensor with metric determinant factor
+        def levi_civita_tensor(a, b, c, d):
+            return (1/(2 * sp.sqrt(abs(g_det)))) * sp.LeviCivita(a, b, c, d)
+        
+        # Compute the result with better algorithm structure
         result = 0
-        for a in range(self.dim):
-            for b in range(self.dim):
-                for c in range(self.dim):
-                    for d in range(self.dim):
-                        for i in range(self.dim):
-                            for j in range(self.dim):
-                                for k in range(self.dim):
-                                    for l in range(self.dim):
-                                        # Dual of Riemann
-                                        dual_term = 0
-                                        for m in range(self.dim):
-                                            for n_idx in range(self.dim):
-                                                for p in range(self.dim):
-                                                    for q in range(self.dim):
-                                                        dual_term += (1/(2 * sqrt(abs(g_det)))) * eps(m, n_idx, p, q) * R_abcd[m][n_idx][i][j]
+        
+        # Pre-compute the dual Riemann tensor (this reduces nested loops)
+        dual_riemann = [[[[0 for _ in range(4)] for _ in range(4)] for _ in range(4)] for _ in range(4)]
+        
+        # Calculate the dual Riemann tensor components needed
+        for a in range(4):
+            for b in range(4):
+                for c in range(4):
+                    for d in range(4):
+                        dual_riemann[a][b][c][d] = 0
+                        for m in range(4):
+                            for n in range(4):
+                                dual_riemann[a][b][c][d] += levi_civita_tensor(a, b, m, n) * R_abcd[m][n][c][d]
+        
+        # Now compute the contraction more efficiently
+        for a in range(4):
+            for b in range(4):
+                for c in range(4):
+                    for d in range(4):
+                        # Get the raised indices version directly
+                        R_raised = 0
+                        for i in range(4):
+                            for j in range(4):
+                                for k in range(4):
+                                    for l in range(4):
+                                        R_raised += g_inv[a, i] * g_inv[b, j] * g_inv[c, k] * g_inv[d, l] * R_abcd[i][j][k][l]
+                                        
+                        # Add to result
+                        result += dual_riemann[a][b][c][d] * R_raised
 
-                                        # Riemann with raised indices
-                                        R_up = 0
-                                        for m in range(self.dim):
-                                            for n_idx in range(self.dim):
-                                                for p in range(self.dim):
-                                                    for q in range(self.dim):
-                                                        R_up += g_inv[k, m] * g_inv[l, n_idx] * g_inv[a, p] * g_inv[b, q] * R_abcd[m][n_idx][p][q]
-
-                                        result += dual_term * R_up
-
+        # Apply simplification if needed
         level = simplify_level if simplify_level is not None else self.simplify_level
         if level > 0:
             result = custom_simplify(result, level)
@@ -268,7 +281,7 @@ class CurvatureInvariants:
 
     def euler_scalar(self, simplify_level=None):
         """
-        Compute the Euler scalar (also called the Gauss - Bonnet term).
+        Compute the Euler scalar (also called the Gauss-Bonnet term).
 
         The Euler scalar is defined as *R_{abcd}R^{cdab} - 4R_{ab}R^{ab} + R^2.
         For 4D manifolds, it's related to the topological Euler characteristic.
@@ -285,7 +298,7 @@ class CurvatureInvariants:
 
         # Check dimension
         if self.dim != 4:
-            raise ValueError("Euler scalar is only defined for 4D manifolds")
+            raise ValueError("Euler scalar is only defined for 4-dimensional spacetimes")
 
         # Use optimization for known metrics
         if self._is_flat():
@@ -353,3 +366,15 @@ class CurvatureInvariants:
 
         self._euler = result
         return result
+
+    def kretschmann(self):
+        """Alias for kretschmann_scalar method."""
+        return self.kretschmann_scalar()
+
+    def chern_pontryagin(self):
+        """Alias for chern_pontryagin_scalar method."""
+        return self.chern_pontryagin_scalar()
+
+    def euler(self):
+        """Alias for euler_scalar method."""
+        return self.euler_scalar()

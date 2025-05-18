@@ -1,4 +1,4 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.2
 Name: itensorpy
 Version: 0.2.5
 Summary: Symbolic and numerical tensor computations for general relativity
@@ -13,7 +13,6 @@ Requires-Dist: sympy>=1.11
 Requires-Dist: numpy>=1.23
 Dynamic: author
 Dynamic: home-page
-Dynamic: license-file
 Dynamic: requires-python
 
 # iTensorPy

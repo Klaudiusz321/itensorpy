@@ -6,7 +6,7 @@ Riemann and Ricci tensors, Einstein tensors, and other tensor operations relevan
 to general relativity and differential geometry.
 """
 
-__version__ = '0.2.0'
+__version__ = '0.2.5'
 
 # Import all public classes and functions
 from .metric import Metric
@@ -23,6 +23,9 @@ from .utils import (
     custom_simplify
 )
 from . import spacetimes
+from .matrix_ops import MatrixOps
+from .tensor_ops import TensorND
+from .differential_ops import Field
 
 __all__ = [
     'Metric', 'ChristoffelSymbols', 'RiemannTensor',
@@ -30,5 +33,7 @@ __all__ = [
     'CurvatureInvariants', 'spacetimes',
     'generate_index_riemann', 'generate_index_ricci',
     'generate_index_christoffel', 'lower_indices',
-    'custom_simplify'
+    'custom_simplify',
+    # New modules
+    'MatrixOps', 'TensorND', 'Field'
 ]

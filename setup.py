@@ -17,6 +17,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Klaudiusz321/itensorpy",
+    license="MIT",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[

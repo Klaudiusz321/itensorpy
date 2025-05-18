@@ -328,3 +328,116 @@ def anti_de_sitter(coordinates: Optional[List[Symbol]] = None, parameters: Optio
     ])
 
     return Metric(components=g, coordinates=coordinates, params=parameters)
+
+
+# Alias functions to match the function names used in tests
+def minkowski_metric(coordinates=None):
+    """Alias for minkowski function."""
+    return minkowski(coordinates)
+
+def schwarzschild_metric(r=None, theta=None, phi=None, M=None):
+    """Alias for schwarzschild function with individual coordinate parameters."""
+    if r is not None and theta is not None and phi is not None:
+        t = sp.symbols('t')
+        coordinates = [t, r, theta, phi]
+        if M is not None:
+            parameters = [M]
+            return schwarzschild(coordinates, parameters)
+        else:
+            return schwarzschild(coordinates)
+    else:
+        return schwarzschild()
+
+def kerr_metric(r=None, theta=None, phi=None, a=None, M=None):
+    """Alias for kerr function with individual coordinate parameters."""
+    if r is not None and theta is not None and phi is not None:
+        t = sp.symbols('t')
+        coordinates = [t, r, theta, phi]
+        if a is not None:
+            M = M or sp.Symbol('M', positive=True)
+            parameters = [M, a]
+            return kerr(coordinates, parameters)
+        else:
+            return kerr(coordinates)
+    else:
+        return kerr()
+
+def kerr_newman_metric(r=None, theta=None, phi=None, a=None, q=None, M=None):
+    """Alias for a Kerr-Newman metric (charged rotating black hole)."""
+    if r is not None and theta is not None and phi is not None:
+        t = sp.symbols('t')
+        coordinates = [t, r, theta, phi]
+        M = M or sp.Symbol('M', positive=True)
+        a = a or sp.Symbol('a', real=True)
+        q = q or sp.Symbol('q', real=True)
+        parameters = [M, a, q]
+        
+        # Create the Kerr-Newman metric
+        # This is similar to Kerr but with an additional Q²/r² term
+        rho_squared = r**2 + (a * sp.cos(theta))**2
+        delta = r**2 - 2 * M*r + a**2 + q**2
+        
+        # Create metric components dictionary
+        components = {}
+        
+        # Diagonal components
+        components[(0, 0)] = -1 + (2*M*r - q**2) / rho_squared  # g_tt
+        components[(1, 1)] = rho_squared / delta  # g_rr
+        components[(2, 2)] = rho_squared  # g_theta_theta
+        components[(3, 3)] = (r**2 + a**2 + (2*M*r - q**2) * a**2 * sp.sin(theta)**2 / rho_squared) * sp.sin(theta)**2  # g_phi_phi
+        
+        # Off-diagonal components
+        components[(0, 3)] = -(2*M*r - q**2) * a * sp.sin(theta)**2 / rho_squared  # g_t_phi = g_phi_t
+        
+        return Metric(components=components, coordinates=coordinates, params=parameters)
+    else:
+        # Default parameters
+        t, r, theta, phi = sp.symbols('t r theta phi')
+        coordinates = [t, r, theta, phi]
+        M = sp.Symbol('M', positive=True)
+        a = sp.Symbol('a', real=True)
+        q = sp.Symbol('q', real=True)
+        parameters = [M, a, q]
+        
+        # Create the Kerr-Newman metric as above
+        rho_squared = r**2 + (a * sp.cos(theta))**2
+        delta = r**2 - 2 * M*r + a**2 + q**2
+        
+        components = {}
+        components[(0, 0)] = -1 + (2*M*r - q**2) / rho_squared
+        components[(1, 1)] = rho_squared / delta
+        components[(2, 2)] = rho_squared
+        components[(3, 3)] = (r**2 + a**2 + (2*M*r - q**2) * a**2 * sp.sin(theta)**2 / rho_squared) * sp.sin(theta)**2
+        components[(0, 3)] = -(2*M*r - q**2) * a * sp.sin(theta)**2 / rho_squared
+        
+        return Metric(components=components, coordinates=coordinates, params=parameters)
+
+def flrw_metric(t=None, r=None, theta=None, phi=None, a=None, k=None):
+    """Alias for friedmann_lemaitre_robertson_walker function with individual coordinate parameters."""
+    if t is not None and r is not None and theta is not None and phi is not None:
+        coordinates = [t, r, theta, phi]
+        parameters = [a] if a is not None else None
+        k_value = k if k is not None else 0
+        return friedmann_lemaitre_robertson_walker(coordinates, parameters, k_value)
+    else:
+        return friedmann_lemaitre_robertson_walker()
+
+def de_sitter_metric_static(r=None, theta=None, phi=None, H=None):
+    """Alias for de_sitter function with individual coordinate parameters."""
+    if r is not None and theta is not None and phi is not None:
+        t = sp.symbols('t')
+        coordinates = [t, r, theta, phi]
+        parameters = [H] if H is not None else None
+        return de_sitter(coordinates, parameters)
+    else:
+        return de_sitter()
+
+def anti_de_sitter_metric(r=None, theta=None, phi=None, L=None):
+    """Alias for anti_de_sitter function with individual coordinate parameters."""
+    if r is not None and theta is not None and phi is not None:
+        t = sp.symbols('t')
+        coordinates = [t, r, theta, phi]
+        parameters = [L] if L is not None else None
+        return anti_de_sitter(coordinates, parameters)
+    else:
+        return anti_de_sitter()
