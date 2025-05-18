@@ -89,16 +89,22 @@ class CurvatureInvariants:
             return False
 
         # Check if we have the typical parameters M and a
-        if len(self.metric.coordinates) != 4 or len(self.metric.params) != 2:
+        if len(self.metric.coordinates) != 4:
             return False
 
         # Check coordinate names
         coord_names = [str(c) for c in self.metric.coordinates]
-        param_names = [str(p) for p in self.metric.params]
-
-        return ('t' in coord_names[0] and 'r' in coord_names[1] and
-                'theta' in coord_names[2] and 'phi' in coord_names[3] and
-                'M' in param_names and 'a' in param_names)
+        
+        # If any t, r, theta, phi coordinates are in the metric and there's a t-phi cross-term,
+        # it's likely a Kerr-type metric
+        if ('t' in coord_names[0] and 'r' in coord_names[1] and 
+            'theta' in coord_names[2] and 'phi' in coord_names[3]):
+            
+            # Check for off-diagonal t-phi component characteristic of Kerr
+            if abs(self.metric.g[0,3]) > 0:
+                return True
+        
+        return False
 
     def _is_flat(self):
         """Check if this is a flat metric."""
@@ -360,3 +366,15 @@ class CurvatureInvariants:
 
         self._euler = result
         return result
+
+    def kretschmann(self):
+        """Alias for kretschmann_scalar method."""
+        return self.kretschmann_scalar()
+
+    def chern_pontryagin(self):
+        """Alias for chern_pontryagin_scalar method."""
+        return self.chern_pontryagin_scalar()
+
+    def euler(self):
+        """Alias for euler_scalar method."""
+        return self.euler_scalar()
