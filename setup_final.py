@@ -11,13 +11,13 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
     name="itensorpy",
-    version="0.2.5",
+    version="0.3.0",
     author="iTensorPy Team",
-    author_email="claudiuswebdesign@gmail.com",  # Using the updated email
+    author_email="claudiuswebdesign@gmail.com",
     description="A Python package for tensor calculations in general relativity",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Klaudiusz321/itensorpy",  # Using the actual GitHub repo
+    url="https://github.com/Klaudiusz321/itensorpy",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
@@ -31,6 +31,4 @@ setup(
         "sympy>=1.7.1",
         "numpy>=1.19.0",
     ],
-    # Explicitly NOT including license metadata fields
-    # The LICENSE file will still be included by MANIFEST.in
 ) 

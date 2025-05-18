@@ -1,19 +1,35 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: itensorpy
-Version: 0.2.5
-Summary: Symbolic and numerical tensor computations for general relativity
+Version: 0.3.0
+Summary: A Python package for tensor calculations in general relativity
 Home-page: https://github.com/Klaudiusz321/itensorpy
 Author: iTensorPy Team
-Author-email: Klaudiusz <claudiuswebdesign@gmail.com>
-License: MIT
+Author-email: claudiuswebdesign@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Mathematics
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sympy>=1.11
-Requires-Dist: numpy>=1.23
+Requires-Dist: sympy>=1.7.1
+Requires-Dist: numpy>=1.19.0
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=2.10.0; extra == "dev"
+Requires-Dist: black>=20.8b1; extra == "dev"
+Requires-Dist: flake8>=3.8.0; extra == "dev"
+Requires-Dist: sphinx>=3.2.0; extra == "dev"
 Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
 Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
 Dynamic: requires-python
+Dynamic: summary
 
 # iTensorPy
 
