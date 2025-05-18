@@ -33,7 +33,21 @@ iTensorPy is a symbolic tensor library for general relativity calculations. It p
   - Friedmann-Lemaître-Robertson-Walker (cosmological)
   - de Sitter and Anti-de Sitter
 - Support for custom metrics via dictionary input or file loading
-- Optimized calculations for known special cases (v0.2.0+)
+- Optimized calculations for known special cases
+- New tensor operations systems with modular design (v0.3.0+)
+
+## What's New in Version 0.3.0
+
+- New modular architecture with specialized modules:
+  - `tensor_ops`: Core tensor operations including arithmetic, contractions, and Einstein summation
+  - `matrix_ops`: Matrix operations for determinants, eigenvalues, and linear solving
+  - `differential_ops`: Differential operators like gradient, divergence, curl and Laplacian
+- New `Field` class for handling tensor fields in different coordinate systems
+- Enhanced tensor operations via the new `TensorND` class
+- Improved performance for large tensor calculations
+- Better simplification strategies for complex tensor expressions
+- Enhanced documentation and examples
+- Bug fixes and stability improvements
 
 ## What's New in Version 0.2.0
 
@@ -130,30 +144,31 @@ sch_einstein = EinsteinTensor.from_metric(sch_metric)
 print(sch_einstein)
 ```
 
-### Working with a 2D Sphere
+### Using the New Field Class (v0.3.0+)
 
 ```python
 import sympy as sp
-from sympy import symbols
-from itensorpy import Metric, ChristoffelSymbols
+from sympy import symbols, sin, cos
+from itensorpy.differential_ops import Field
 
-# Define coordinates for a 2D sphere
-r, theta = symbols('r theta')
-coordinates = [r, theta]
+# Define coordinates
+x, y, z = symbols('x y z')
 
-# Define the 2D sphere metric
-g = sp.Matrix([[1, 0], [0, r**2]])
-metric = Metric(components=g, coordinates=coordinates)
+# Define a vector field (e.g., electric field from a point charge)
+Ex = x / (x**2 + y**2 + z**2)**(3/2)
+Ey = y / (x**2 + y**2 + z**2)**(3/2)
+Ez = z / (x**2 + y**2 + z**2)**(3/2)
 
-# Compute Christoffel symbols
-christoffel = ChristoffelSymbols.from_metric(metric)
+# Create a field object
+E_field = Field([Ex, Ey, Ez], coordinates=[x, y, z])
 
-# Print non-zero Christoffel symbols
-print(christoffel)
+# Compute the divergence (should be zero except at origin)
+div_E = E_field.divergence()
+print(f"Divergence of E: {div_E}")
 
-# Get specific components
-print(f"Γ^1_01 = {christoffel.get_component(1, 0, 1)}")
-print(f"Γ^1_10 = {christoffel.get_component(1, 1, 0)}")
+# Compute the curl (should be zero for conservative field)
+curl_E = E_field.curl()
+print(f"Curl of E: {curl_E}")
 ```
 
 ## Development and Testing
