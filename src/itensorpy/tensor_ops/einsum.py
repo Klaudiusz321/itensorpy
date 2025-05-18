@@ -46,18 +46,45 @@ class EinsumMixin:
         Returns:
             TensorND: Result of the einsum operation
         """
-        # Convert all inputs to numpy arrays for the einsum operation
+        # Try the faster NumPy implementation first
         np_arrays = [self.to_numpy()]
         for op in operands:
             if not hasattr(op, 'to_numpy'):
                 raise TypeError("All operands must be TensorND instances")
             np_arrays.append(op.to_numpy())
-            
-        # Perform the einsum operation
-        result_np = np.einsum(subscripts, *np_arrays)
         
-        # Convert back to a TensorND
-        return self.__class__(result_np)
+        try:
+            # Perform the einsum operation with NumPy
+            result_np = np.einsum(subscripts, *np_arrays)
+            # Convert back to a TensorND
+            return self.__class__(result_np)
+        except TypeError:
+            # If NumPy einsum fails (e.g., with symbolic values), use the sympy-based implementation
+            # Parse the subscripts
+            try:
+                lhs, rhs = subscripts.split('->')
+            except ValueError:
+                raise ValueError("Notation must contain '->', e.g. 'ij,jk->ik'")
+            
+            input_notations = lhs.split(',')
+            output_notation = rhs.strip()
+            
+            # Collect all tensor data
+            arrays = [self.data] + [op.data for op in operands]
+            
+            # Create tensor product
+            prod = arrays[0]
+            for arr in arrays[1:]:
+                prod = tensorproduct(prod, arr)
+            
+            # Find pairs of axes to contract
+            pairs = parse_einsum_pairs(input_notations, output_notation)
+            
+            # Perform contraction
+            result = tensorcontraction(prod, *pairs)
+            
+            # Return a new TensorND of the same class
+            return self.__class__(result)
     
     def einsum_reduce(self, subscripts):
         """
@@ -69,14 +96,39 @@ class EinsumMixin:
         Returns:
             TensorND or scalar: Result of the einsum operation
         """
-        result_np = np.einsum(subscripts, self.to_numpy())
-        
-        # If the result is a scalar, return it directly
-        if isinstance(result_np, (int, float, complex, np.number)):
-            return result_np
+        try:
+            result_np = np.einsum(subscripts, self.to_numpy())
             
-        # Otherwise, convert back to a TensorND
-        return self.__class__(result_np)
+            # If the result is a scalar, return it directly
+            if isinstance(result_np, (int, float, complex, np.number)):
+                return result_np
+            
+            # Otherwise, convert back to a TensorND
+            return self.__class__(result_np)
+        except TypeError:
+            # If NumPy einsum fails (e.g., with symbolic values), use the sympy-based implementation
+            # This is similar to the parsing in einsum method
+            try:
+                lhs, rhs = subscripts.split('->')
+            except ValueError:
+                raise ValueError("Notation must contain '->', e.g. 'ii->'")
+            
+            # Since this is a reduction, we only have one input notation
+            input_notation = lhs.strip()
+            output_notation = rhs.strip()
+            
+            # Find pairs of axes to contract
+            pairs = parse_einsum_pairs([input_notation], output_notation)
+            
+            # Perform contraction on this tensor alone
+            result = tensorcontraction(self.data, *pairs)
+            
+            # If the result is a scalar (0-dimensional array), return the value
+            if not result.shape:
+                return result[()]
+            
+            # Otherwise, return a new TensorND
+            return self.__class__(result)
 
     def einsum(self, notation, *others):
         # 1) rozbijamy notację wejście/wyjście
