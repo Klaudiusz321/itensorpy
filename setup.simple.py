@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="itensorpy",
-    version="0.2.3",
+    version="0.2.4",
     author="iTensorPy Team",
-    author_email="itensorpy@example.com",
+    author_email="claudiuswebdesign@gmail.com",
     description="A Python package for tensor calculations in general relativity",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/itensorpy",
+    url="https://github.com/Klaudiusz321/itensorpy",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
