@@ -1,7 +1,12 @@
 # iTensorPy
 
-[![Python Tests](https://github.com/yourusername/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/yourusername/itensorpy/actions)
-[![codecov](https://codecov.io/gh/yourusername/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/itensorpy)
+
+<p align="center">
+  <img src="./logo.png" alt="iTensorPy Logo" width="300px">
+</p>
+
+[![Python Tests](https://github.com/Klaudiusz321/itensorpy/workflows/Python%20Tests/badge.svg)](https://github.com/Klaudiusz321/itensorpy/actions)
+[![Codecov](https://codecov.io/gh/Klaudiusz321/itensorpy/branch/main/graph/badge.svg)](https://codecov.io/gh/Klaudiusz321/itensorpy)
 [![PyPI version](https://badge.fury.io/py/itensorpy.svg)](https://badge.fury.io/py/itensorpy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
