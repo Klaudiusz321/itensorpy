@@ -1,6 +1,4 @@
-"""
-Module for computing and manipulating Christoffel symbols.
-"""
+
 
 import sympy as sp
 from sympy import Matrix, Symbol, diff, sin, cos
